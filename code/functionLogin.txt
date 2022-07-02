@@ -1,0 +1,56 @@
+import React, { Component, useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import Header from '../compoments/Header';
+import axios from 'axios';
+
+const Login = () => {
+  const navigate = useNavigate();
+  const [stateLogin, setLogin] = useState({
+    'email': '',
+    'password':''
+  });
+  const handleInput = (e) => {
+    setLogin({...stateLogin, [e.target.name] : e.target.value})
+  }
+  const loginSubmit = async (e)=>{
+    e.preventDefault();
+    const data = {
+      email: stateLogin.email,
+      password: stateLogin.password,
+    }
+
+    const res = await axios.post('http://127.0.0.1:8000/api/login', data)
+    if(res.data.status === 200){
+      console.log(res.data.msg)
+      
+      navigate('/')
+    }else {
+      console.log('error!!!!!!!!!!')
+    }
+  }
+
+  return (
+    <div>
+      <div>
+                <Header />
+                <div className='row mt-5'>
+                <div className='col-md-6 offset-md-3'>
+                <form onSubmit={loginSubmit}>
+                    <div className="mb-3">
+                        <label className="form-label">Email</label>
+                        <input type="email" className="form-control" name='email' onChange={handleInput} value={stateLogin.email}/>
+                    </div>
+                    <div className="mb-3">
+                        <label className="form-label">Password</label>
+                        <input type="password" className="form-control" name='password' onChange={handleInput} value={stateLogin.password}/>
+                    </div>
+                    <button type="submit" className="btn btn-primary w-100">Add</button>
+                  </form>
+                </div>
+                </div>
+            </div>
+    </div>
+  );
+};
+
+export default Login;
